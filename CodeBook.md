@@ -5,7 +5,6 @@ Getting and Cleaning Data Course Project Code Book
 * fields that start with 'mean_of_' are the means of the respective field based on subject and activity.
 
 ### List of fields from the tidy dataset
-
 * subject_id - Is the identity of the subject doing the experiment
 * activity - Is one of the following. This represents what the subject is doing while performing the experiment
 ** WALKING
