@@ -6,8 +6,6 @@ load_subject_data <- function(dataset_type){
       subject_file_name = paste("subject_", dataset_type, ".txt", sep="")
       subject_file = file.path(current_working_directory, "Dataset", dataset_type, subject_file_name)
       subject_df = read.csv(subject_file, col.names=c("subject_id"), colClasses=c("numeric"), header=FALSE)
-      # observation_df = data.frame(observation_id = seq_along(subject_df$subject_id))      
-      # return(cbind(observation_df, subject_df))
       return(subject_df)
     }
     else
@@ -43,7 +41,8 @@ load_feature_data <- function(dataset_type){
     current_working_directory = getwd()
     feature_file_name = paste("x_", dataset_type, ".txt", sep="")
     feature_file = file.path(current_working_directory, "Dataset", dataset_type, feature_file_name)
-    feature_df = read.csv(feature_file, header=FALSE, sep="", blank.lines.skip=TRUE, col.name=col_names, colClasses = col_datatypes)
+    feature_df = read.csv(feature_file, header=FALSE, sep="", blank.lines.skip=TRUE, colClasses = col_datatypes)
+    colnames(feature_df) = col_names
     
     return(feature_df)
   }
@@ -76,3 +75,20 @@ create_complete_model <- function(output_model = FALSE){
 	return(all_observations)
 }
 
+model_with_mean_and_stddev <- function(output_model = FALSE, output_complete_model = FALSE) {
+  current_working_directory = getwd()
+  output_path = file.path(current_working_directory, "output")
+  if(!file.exists(output_path)){dir.create(output_path)}
+  merged_output_file = file.path(output_path, "observations_with_mean_and_stddev.csv")
+  
+  features = load_features()
+  features_with_mean_and_stddev =  features[grep("(-(std|mean)[()](-(X|Y|Z))?)", ignore.case=TRUE,features)]
+  features_with_mean_and_stddev = c("subject_id", "activity_id", features_with_mean_and_stddev)
+
+  complete_model = create_complete_model(output_complete_model)
+  x = complete_model[, features_with_mean_and_stddev]
+
+  if(output_model) write.csv(x, file = merged_output_file, row.names=FALSE)
+
+  return(x)
+}
