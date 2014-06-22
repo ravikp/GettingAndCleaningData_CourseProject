@@ -1,3 +1,5 @@
+library(data.table)
+
 load_subject_data <- function(dataset_type){
     if(dataset_type %in% c("train","test")){
       current_working_directory = getwd()
@@ -36,13 +38,13 @@ load_activity_data <- function(dataset_type){
 load_features <- function(){
   features = read.csv("./Dataset/features.txt", sep=" ",
     col.names=c("id", "name"), header=FALSE, colClasses = c("numeric", "character"))
-  features$name;
+  return(features$name);
 }
 
 load_feature_data <- function(dataset_type){
   if(dataset_type %in% c("train","test")){
     col_names = load_features()
-    col_datatypes = rep("numeric", length(features))
+    col_datatypes = rep("numeric", length(col_names))
 
     current_working_directory = getwd()
     feature_file_name = paste("x_", dataset_type, ".txt", sep="")
@@ -83,18 +85,40 @@ create_complete_model <- function(output_model = FALSE){
 	return(all_observations)
 }
 
-model_with_mean_and_stddev <- function(output_model = FALSE, output_complete_model = FALSE) {
+model_with_mean_and_stddev <- function(output_model = FALSE) {
   current_working_directory = getwd()
   output_path = file.path(current_working_directory, "output")
   if(!file.exists(output_path)){dir.create(output_path)}
   merged_output_file = file.path(output_path, "observations_with_mean_and_stddev.csv")
 
-  complete_model = create_complete_model(output_complete_model)
+  complete_model = create_complete_model()
   columns = colnames(complete_model)
   pattern = "(subject|activity)|(-(std|mean)[()](-(X|Y|Z))?)"
 
   columns_with_mean_and_stddev = columns[grep(pattern, ignore.case=TRUE, columns)]
   x = complete_model[, columns_with_mean_and_stddev]
+
+  if(output_model) write.csv(x, file = merged_output_file, row.names=FALSE)
+
+  return(x)
+}
+
+create_tidy_dataset <- function(output_model=FALSE){
+  current_working_directory = getwd()
+  output_path = file.path(current_working_directory, "output")
+  if(!file.exists(output_path)){dir.create(output_path)}
+  merged_output_file = file.path(output_path, "tidy_dataset.csv")
+
+  complete_model = create_complete_model()
+  columns = colnames(complete_model)
+  pattern = "-(std|mean)[()](-(X|Y|Z))?"
+
+  columns_without_mean_and_stddev = columns[grep(pattern, ignore.case=TRUE, columns, invert=TRUE)]
+  x = as.data.table(complete_model[, columns_without_mean_and_stddev])
+
+  # does grouping and mean for the rest of the fields.
+  x = x[, lapply(.SD, mean), by = c("subject_id", "activity")]
+  x = x[order(x$subject_id, x$activity),]
 
   if(output_model) write.csv(x, file = merged_output_file, row.names=FALSE)
 

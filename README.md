@@ -1,6 +1,10 @@
 Getting and Cleaning Data Course Project
 ========================================
 
+### Prerequisites
+* This program uses data.table for calculating tidy dataset
+* If the data.table is not installed then download the package by executing install.packages("data.table")
+
 ### How to run the program
 1. Checkout the code to a directory
 2. Open R studio
@@ -19,3 +23,7 @@ Getting and Cleaning Data Course Project
 3. To verify the third question:- use descriptive activity names
 	* Both the model1 and model2 variables created in the above commands contain column name 'activity'. Also the output is checked into the github repository in output directory.
 	* Output directory contains all_observations.csv with 'activity' column indicating description.
+4. To verify the fifth question:- independent tidy dataset
+	* Execute the following command in R studio: model3 = create_tidy_dataset()
+	* If the above command is executed with argument output_model = TRUE then the file "tidy_dataset.csv" shall be generated in the output directory.
+
