@@ -120,6 +120,12 @@ create_tidy_dataset <- function(output_model=FALSE){
   x = x[, lapply(.SD, mean), by = c("subject_id", "activity")]
   x = x[order(x$subject_id, x$activity),]
 
+  # change the column names
+  col_names = colnames(x)
+  col_names_with_features = setdiff(col_names, c("subject_id","activity"))
+  new_colnames = c("subject_id","activity", paste(c("mean_of_"),col_names_with_features,sep=""))
+  setnames(x, col_names,new_colnames)
+
   if(output_model) write.csv(x, file = merged_output_file, row.names=FALSE)
 
   return(x)
