@@ -1,5 +1,3 @@
-setwd("c:/users/ravikup/projects/cp/")
-
 load_subject_data <- function(dataset_type){
     if(dataset_type %in% c("train","test")){
       current_working_directory = getwd()
