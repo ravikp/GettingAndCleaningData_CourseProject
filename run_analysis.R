@@ -80,13 +80,13 @@ model_with_mean_and_stddev <- function(output_model = FALSE, output_complete_mod
   output_path = file.path(current_working_directory, "output")
   if(!file.exists(output_path)){dir.create(output_path)}
   merged_output_file = file.path(output_path, "observations_with_mean_and_stddev.csv")
-  
-  features = load_features()
-  features_with_mean_and_stddev =  features[grep("(-(std|mean)[()](-(X|Y|Z))?)", ignore.case=TRUE,features)]
-  features_with_mean_and_stddev = c("subject_id", "activity_id", features_with_mean_and_stddev)
 
   complete_model = create_complete_model(output_complete_model)
-  x = complete_model[, features_with_mean_and_stddev]
+  columns = colnames(complete_model)
+  pattern = "(subject|activity)|(-(std|mean)[()](-(X|Y|Z))?)"
+  
+  columns_with_mean_and_stddev = columns[grep(pattern, ignore.case=TRUE, columns)]
+  x = complete_model[, columns_with_mean_and_stddev]
 
   if(output_model) write.csv(x, file = merged_output_file, row.names=FALSE)
 
