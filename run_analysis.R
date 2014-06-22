@@ -71,7 +71,7 @@ create_complete_model <- function(output_model = FALSE){
 
 	all_observations = cbind(subject, activity, feature)
 
-	if(output_model) write.csv(all_observations, file=merged_output_file)
+	if(output_model) write.csv(all_observations, file=merged_output_file, row.names=FALSE)
 
 	return(all_observations)
 }
