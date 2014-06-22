@@ -10,6 +10,7 @@ Getting and Cleaning Data Course Project
 ** Function 'create_complete_model' - generates model that combines all the datasets into a single dataset
 ** Function 'model_with_mean_and_stddev' - generates model whose column names contain either mean or stddev
 ** Function 'create_tidy_dataset' - generates model grouping subject_id, activity and taking the mean of all the columns whose column name does not contain mean or stddev
+** All the above three functions take logical argument called 'output_model'. If the above methods are called with TRUE then the models are generated as files in the directory named 'output'
 
 ### How to run the program
 1. Checkout the code to a directory
@@ -31,5 +32,5 @@ Getting and Cleaning Data Course Project
 	* Output directory contains all_observations.csv with 'activity' column indicating description.
 4. To verify the fifth question:- independent tidy dataset
 	* Execute the following command in R studio: model3 = create_tidy_dataset()
-	* If the above command is executed with argument output_model = TRUE then the file "tidy_dataset.csv" shall be generated in the output directory.
+	* If the above command is executed with argument output_model = TRUE then the file "tidy_dataset.txt" shall be generated in the output directory.
 

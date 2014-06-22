@@ -107,7 +107,7 @@ create_tidy_dataset <- function(output_model=FALSE){
   current_working_directory = getwd()
   output_path = file.path(current_working_directory, "output")
   if(!file.exists(output_path)){dir.create(output_path)}
-  merged_output_file = file.path(output_path, "tidy_dataset.csv")
+  merged_output_file = file.path(output_path, "tidy_dataset.txt")
 
   complete_model = create_complete_model()
   columns = colnames(complete_model)
