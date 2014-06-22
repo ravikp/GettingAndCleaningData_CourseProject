@@ -1,13 +1,13 @@
 Getting and Cleaning Data Course Project
 ========================================
 
-h3. How to run the program
+h6. How to run the program
 # Checkout the code to a directory
 # Open R studio
 # Set working directory of the R Studio as the directory where the code is checked out.
 # Source the run_analysis.R file by executing the command source("./run_analysis.R")
 
-h3. How to verify the course project
+h6. How to verify the course project
 # To verify the first question:- to merge all datasets
 ## execute the following command in R studio: model1 = create_complete_model()
 ## if we execute the above function with optional argument output_model = TRUE then the output is generated in output directory with file name 'all_observations.csv'
