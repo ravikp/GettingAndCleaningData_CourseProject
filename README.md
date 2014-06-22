@@ -5,6 +5,12 @@ Getting and Cleaning Data Course Project
 * This program uses data.table for calculating tidy dataset
 * If the data.table is not installed then download the package by executing install.packages("data.table")
 
+### Structure of the program
+* The file run_analysis.R program mainly contains following three functions
+** Function 'create_complete_model' - generates model that combines all the datasets into a single dataset
+** Function 'model_with_mean_and_stddev' - generates model whose column names contain either mean or stddev
+** Function 'create_tidy_dataset' - generates model grouping subject_id, activity and taking the mean of all the columns whose column name does not contain mean or stddev
+
 ### How to run the program
 1. Checkout the code to a directory
 2. Open R studio
