@@ -24,11 +24,14 @@ load_subject_data <- function(dataset_type){
 
 load_feature_data <- function(dataset_type){
   if(dataset_type %in% c("train","test")){
-  	features = load_features()
+  	col_names = load_features()
+  	col_datatypes = rep("numeric", length(features))
+
     current_working_directory = getwd()
     feature_file_name = paste("x_", dataset_type, ".txt", sep="")
     feature_file = file.path(current_working_directory, "Dataset", dataset_type, feature_file_name)
-    feature_df = read.csv(feature_file, col.names=features, header=FALSE)
+    feature_df = read.csv(feature_file, header=FALSE, sep="", blank.lines.skip=TRUE, col.name=col_names, colClasses = col_datatypes)
+
     observation_df = data.frame(observation_id = seq(nrow(feature_df)))      
     return(cbind(observation_df, feature_df))
   }
