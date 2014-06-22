@@ -1,14 +1,5 @@
 setwd("c:/users/ravikup/projects/cp/")
 
-load_features <- function(){
-  features = read.csv("./Dataset/features.txt", sep=" ", col.names=c("id", "name"), header=FALSE, colClasses = c("numeric", "character"))
-  features$name;  
-}
-
-load_activities <- function(){
-  activities = read.csv("./Dataset/activity_labels.txt", sep=" ", col.names=c("id", "name"), header=FALSE, colClasses = c("numeric", "factor"))  
-}
-
 load_subject_data <- function(dataset_type){
     if(dataset_type %in% c("train","test")){
       current_working_directory = getwd()
@@ -22,21 +13,8 @@ load_subject_data <- function(dataset_type){
       stop(paste("cannot find dataset_type:",dataset_type,". Recognized dataset_types can be either test or train", sep=""))
 }
 
-load_feature_data <- function(dataset_type){
-  if(dataset_type %in% c("train","test")){
-  	col_names = load_features()
-  	col_datatypes = rep("numeric", length(features))
-
-    current_working_directory = getwd()
-    feature_file_name = paste("x_", dataset_type, ".txt", sep="")
-    feature_file = file.path(current_working_directory, "Dataset", dataset_type, feature_file_name)
-    feature_df = read.csv(feature_file, header=FALSE, sep="", blank.lines.skip=TRUE, col.name=col_names, colClasses = col_datatypes)
-
-    observation_df = data.frame(observation_id = seq(nrow(feature_df)))      
-    return(cbind(observation_df, feature_df))
-  }
-  else
-    stop(paste("cannot find dataset_type:",dataset_type,". Recognized dataset_types can be either test or train", sep=""))
+load_activities <- function(){
+  activities = read.csv("./Dataset/activity_labels.txt", sep=" ", col.names=c("id", "name"), header=FALSE, colClasses = c("numeric", "factor"))  
 }
 
 load_activity_data <- function(dataset_type){
@@ -45,8 +23,28 @@ load_activity_data <- function(dataset_type){
     activity_file_name = paste("y_", dataset_type, ".txt", sep="")
     activity_file = file.path(current_working_directory, "Dataset", dataset_type, activity_file_name)
     activity_df = read.csv(activity_file, col.names=c("activity_id"), colClasses=c("numeric"), header=FALSE)
-    observation_df = data.frame(observation_id = seq_along(activity_df$activity_id))      
-    return(cbind(observation_df, activity_df))
+    return(activity_df)
+  }
+  else
+    stop(paste("cannot find dataset_type:",dataset_type,". Recognized dataset_types can be either test or train", sep=""))
+}
+
+load_features <- function(){
+  features = read.csv("./Dataset/features.txt", sep=" ", col.names=c("id", "name"), header=FALSE, colClasses = c("numeric", "character"))
+  features$name;  
+}
+
+load_feature_data <- function(dataset_type){
+  if(dataset_type %in% c("train","test")){
+    col_names = load_features()
+    col_datatypes = rep("numeric", length(features))
+
+    current_working_directory = getwd()
+    feature_file_name = paste("x_", dataset_type, ".txt", sep="")
+    feature_file = file.path(current_working_directory, "Dataset", dataset_type, feature_file_name)
+    feature_df = read.csv(feature_file, header=FALSE, sep="", blank.lines.skip=TRUE, col.name=col_names, colClasses = col_datatypes)
+    
+    return(feature_df)
   }
   else
     stop(paste("cannot find dataset_type:",dataset_type,". Recognized dataset_types can be either test or train", sep=""))
@@ -70,12 +68,10 @@ create_complete_model <- function(output_model = FALSE){
 	test_feature 	= load_feature_data("test")
 	feature 		= rbind(train_feature, test_feature)
 
-	all_observations = merge(merge(subject, activity),feature)
+	all_observations = cbind(subject, activity, feature)
 
 	if(output_model) write.csv(all_observations, file=merged_output_file)
 
 	return(all_observations)
 }
-
-
 
