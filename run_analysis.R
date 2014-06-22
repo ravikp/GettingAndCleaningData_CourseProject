@@ -13,7 +13,7 @@ load_subject_data <- function(dataset_type){
 }
 
 load_activities <- function(){
-  activities = read.csv("./Dataset/activity_labels.txt", sep=" ", col.names=c("id", "name"), header=FALSE, colClasses = c("numeric", "factor"))  
+  activities = read.csv("./Dataset/activity_labels.txt", sep=" ", col.names=c("id", "activity"), header=FALSE, colClasses = c("numeric", "factor"))
 }
 
 load_activity_data <- function(dataset_type){
@@ -22,7 +22,9 @@ load_activity_data <- function(dataset_type){
     activity_file_name = paste("y_", dataset_type, ".txt", sep="")
     activity_file = file.path(current_working_directory, "Dataset", dataset_type, activity_file_name)
     activity_df = read.csv(activity_file, col.names=c("activity_id"), colClasses=c("numeric"), header=FALSE)
-    return(activity_df)
+    activities = load_activities()
+    activity_df_with_name = merge(activities, activity_df, by.x="id", by.y="activity_id", all = TRUE)
+    return(activity_df_with_name["activity"])
   }
   else
     stop(paste("cannot find dataset_type:",dataset_type,". Recognized dataset_types can be either test or train", sep=""))
@@ -30,7 +32,7 @@ load_activity_data <- function(dataset_type){
 
 load_features <- function(){
   features = read.csv("./Dataset/features.txt", sep=" ", col.names=c("id", "name"), header=FALSE, colClasses = c("numeric", "character"))
-  features$name;  
+  features$name;
 }
 
 load_feature_data <- function(dataset_type){
@@ -43,7 +45,7 @@ load_feature_data <- function(dataset_type){
     feature_file = file.path(current_working_directory, "Dataset", dataset_type, feature_file_name)
     feature_df = read.csv(feature_file, header=FALSE, sep="", blank.lines.skip=TRUE, colClasses = col_datatypes)
     colnames(feature_df) = col_names
-    
+
     return(feature_df)
   }
   else
@@ -59,11 +61,11 @@ create_complete_model <- function(output_model = FALSE){
 	train_subject 	= load_subject_data("train")
 	test_subject 	= load_subject_data("test")
 	subject 		= rbind(train_subject, test_subject)
-	
+
 	train_activity 	= load_activity_data("train")
 	test_activity 	= load_activity_data("test")
 	activity 		= rbind(train_activity, test_activity)
-	
+
 	train_feature 	= load_feature_data("train")
 	test_feature 	= load_feature_data("test")
 	feature 		= rbind(train_feature, test_feature)
@@ -84,7 +86,7 @@ model_with_mean_and_stddev <- function(output_model = FALSE, output_complete_mod
   complete_model = create_complete_model(output_complete_model)
   columns = colnames(complete_model)
   pattern = "(subject|activity)|(-(std|mean)[()](-(X|Y|Z))?)"
-  
+
   columns_with_mean_and_stddev = columns[grep(pattern, ignore.case=TRUE, columns)]
   x = complete_model[, columns_with_mean_and_stddev]
 
