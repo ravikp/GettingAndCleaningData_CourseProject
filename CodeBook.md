@@ -7,14 +7,12 @@ Getting and Cleaning Data Course Project Code Book
 ### List of fields from the tidy dataset
 * subject_id - Is the identity of the subject doing the experiment
 * activity - Is one of the following. This represents what the subject is doing while performing the experiment
-
 ** WALKING
 ** WALKING_UPSTAIRS
 ** WALKING_DOWNSTAIRS
 ** SITTING
 ** STANDING
 ** LAYING
-
 * mean_of_tBodyAcc-mad()-X
 * mean_of_tBodyAcc-mad()-Y
 * mean_of_tBodyAcc-mad()-Z
